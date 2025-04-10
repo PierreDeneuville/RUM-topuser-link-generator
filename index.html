@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Générateur de liens Datadog RUM</title>
+  <style>
+    :root {
+      --primary: #632CA6;
+      --primary-dark: #4a1d8a;
+      --secondary: #774DCB;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --success: #28a745;
+      --danger: #dc3545;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+    }
+    
+    .container {
+      width: 90%;
+      max-width: 800px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+    }
+    
+    h1 {
+      color: var(--primary);
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+    
+    .logo {
+      height: 30px;
+      margin-right: 10px;
+      vertical-align: bottom;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(119, 77, 203, 0.2);
+    }
+    
+    .time-range {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .time-range > div {
+      flex: 1;
+    }
+    
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .result {
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .result h3 {
+      margin-top: 0;
+      color: var(--dark);
+    }
+    
+    .alert {
+      padding: 0.75rem 1rem;
+      margin: 1rem 0;
+      border-radius: 4px;
+      display: none;
+    }
+    
+    .alert-success {
+      background-color: rgba(40, 167, 69, 0.15);
+      border-left: 4px solid var(--success);
+      color: var(--success);
+    }
+    
+    .alert-danger {
+      background-color: rgba(220, 53, 69, 0.15);
+      border-left: 4px solid var(--danger);
+      color: var(--danger);
+    }
+    
+    .flex-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 32">
+        <path fill="#632CA6" d="M15.3 4.8c6.1 0 11 4.95 11 11.05 0 6.1-4.95 11.05-11.05 11.05S4.25 22 4.25 15.9c0-6.15 4.95-11.1 11.05-11.1zm0 4.6a6.61 6.61 0 0 0-6.45 6.45c0 3.5 2.9 6.45 6.45 6.45 3.5 0 6.45-2.9 6.45-6.45 0-3.55-2.9-6.45-6.45-6.45zm0 3.25a3.21 3.21 0 0 1 0 6.4 3.21 3.21 0 0 1 0-6.4z"/>
+      </svg>
+      Générateur de liens Datadog RUM
+    </h1>
+    
+    <div class="form-group">
+      <label for="actionTarget">Action Target Name:</label>
+      <input type="text" id="actionTarget" placeholder="Exemple: download Download FR regulation master data file">
+    </div>
+    
+    <div class="form-group">
+      <label>Plage de temps:</label>
+      <div class="time-range">
+        <div>
+          <select id="timeRange" class="form-control">
+            <option value="15m">15 minutes</option>
+            <option value="1h">1 heure</option>
+            <option value="4h">4 heures</option>
+            <option value="1d" selected>1 jour</option>
+            <option value="7d">7 jours</option>
+            <option value="30d">30 jours</option>
+            <option value="custom">Personnalisé</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <div class="flex-row">
+      <button id="generateBtn">Générer le lien</button>
+      <button id="copyBtn" class="hidden">Copier le lien</button>
+    </div>
+    
+    <div id="alertSuccess" class="alert alert-success">
+      Lien copié dans le presse-papiers !
+    </div>
+    
+    <div id="alertError" class="alert alert-danger">
+      Veuillez saisir un Action Target Name.
+    </div>
+    
+    <div id="result" class="result hidden">
+      <h3>Lien généré:</h3>
+      <p id="generatedLink"></p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const actionTargetInput = document.getElementById('actionTarget');
+      const timeRangeSelect = document.getElementById('timeRange');
+      const generateBtn = document.getElementById('generateBtn');
+      const copyBtn = document.getElementById('copyBtn');
+      const resultDiv = document.getElementById('result');
+      const generatedLinkEl = document.getElementById('generatedLink');
+      const alertSuccess = document.getElementById('alertSuccess');
+      const alertError = document.getElementById('alertError');
+      
+      let generatedLink = '';
+      
+      // Calculate timestamp ranges (in milliseconds)
+      function getTimeRange(option) {
+        const now = new Date().getTime();
+        const ranges = {
+          '15m': { from: now - 15 * 60 * 1000, to: now },
+          '1h': { from: now - 60 * 60 * 1000, to: now },
+          '4h': { from: now - 4 * 60 * 60 * 1000, to: now },
+          '1d': { from: now - 24 * 60 * 60 * 1000, to: now },
+          '7d': { from: now - 7 * 24 * 60 * 60 * 1000, to: now },
+          '30d': { from: now - 30 * 24 * 60 * 60 * 1000, to: now },
+          'custom': { from: now - 365 * 24 * 60 * 60 * 1000, to: now }
+        };
+        
+        return ranges[option];
+      }
+      
+      // Generate the Datadog RUM link
+      function generateLink() {
+        const actionTarget = actionTargetInput.value.trim();
+        
+        if (!actionTarget) {
+          alertError.style.display = 'block';
+          setTimeout(() => {
+            alertError.style.display = 'none';
+          }, 3000);
+          return;
+        }
+        
+        const timeRange = getTimeRange(timeRangeSelect.value);
+        const encodedTarget = encodeURIComponent(`@type:action @action.target.name:"${actionTarget}"`);
+        
+        generatedLink = `https://app.datadoghq.eu/rum/sessions?query=${encodedTarget}&agg_m=count&agg_m_source=base&agg_t=count&fromUser=true&viz=stream&from_ts=${timeRange.from}&to_ts=${timeRange.to}&live=true`;
+        
+        generatedLinkEl.textContent = generatedLink;
+        resultDiv.classList.remove('hidden');
+        copyBtn.classList.remove('hidden');
+      }
+      
+      // Copy link to clipboard
+      function copyToClipboard() {
+        navigator.clipboard.writeText(generatedLink).then(() => {
+          alertSuccess.style.display = 'block';
+          setTimeout(() => {
+            alertSuccess.style.display = 'none';
+          }, 3000);
+        });
+      }
+      
+      generateBtn.addEventListener('click', generateLink);
+      copyBtn.addEventListener('click', copyToClipboard);
+    });
+  </script>
+</body>
+</html>
