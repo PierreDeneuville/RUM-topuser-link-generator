@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Générateur de liens Datadog RUM</title>
+  <title>Générateur de liens Datadog RUM pour View Name</title>
   <style>
     :root {
       --primary: #632CA6;
@@ -83,6 +83,67 @@
     .time-range > div {
       flex: 1;
     }
+
+    select {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      background-color: white;
+    }
+    
+    select:focus {
+      outline: none;
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(119, 77, 203, 0.2);
+    }
+
+    .action-filters {
+      margin-bottom: 1.5rem;
+    }
+
+    .action-filter-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .action-filter-item input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+
+    .custom-action {
+      margin-top: 1rem;
+    }
+
+    .custom-actions-list {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background-color: var(--light);
+      border-radius: 4px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .custom-action-tag {
+      display: inline-block;
+      background-color: #e9ecef;
+      border-radius: 3px;
+      padding: 0.3rem 0.5rem;
+      margin: 0.2rem;
+      font-size: 0.85rem;
+    }
+
+    .custom-action-tag button {
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 0.85rem;
+      margin-left: 0.3rem;
+      padding: 0;
+    }
     
     button {
       background-color: var(--primary);
@@ -97,6 +158,19 @@
     
     button:hover {
       background-color: var(--primary-dark);
+    }
+
+    button.secondary {
+      background-color: #6c757d;
+    }
+
+    button.secondary:hover {
+      background-color: #5a6268;
+    }
+
+    button.small {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.85rem;
     }
     
     .result {
@@ -148,14 +222,53 @@
       <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 32">
         <path fill="#632CA6" d="M15.3 4.8c6.1 0 11 4.95 11 11.05 0 6.1-4.95 11.05-11.05 11.05S4.25 22 4.25 15.9c0-6.15 4.95-11.1 11.05-11.1zm0 4.6a6.61 6.61 0 0 0-6.45 6.45c0 3.5 2.9 6.45 6.45 6.45 3.5 0 6.45-2.9 6.45-6.45 0-3.55-2.9-6.45-6.45-6.45zm0 3.25a3.21 3.21 0 0 1 0 6.4 3.21 3.21 0 0 1 0-6.4z"/>
       </svg>
-      Générateur de liens Datadog RUM
+      Générateur de liens Datadog RUM - View Name
     </h1>
     
     <div class="form-group">
-      <label for="actionTarget">Action Target Name:</label>
-      <input type="text" id="actionTarget" placeholder="Exemple: download Download FR regulation master data file">
+      <label for="viewName">View Name:</label>
+      <input type="text" id="viewName" placeholder="Exemple: Broom">
+    </div>
+
+    <div class="form-group">
+      <label for="applicationId">Application ID (do not change):</label>
+      <input type="text" id="applicationId" value="dfbd2373-17d3-4c3b-ad34-5bd9b0a27e19">
     </div>
     
+    <div class="form-group">
+      <label>Actions de sauvegarde:</label>
+      <div class="action-filters">
+        <div class="action-filter-item">
+          <input type="checkbox" id="clickOnSave" checked>
+          <label for="clickOnSave">click on Save</label>
+        </div>
+        <div class="action-filter-item">
+          <input type="checkbox" id="clickOnCancelSave" checked>
+          <label for="clickOnCancelSave">click on Cancel Save</label>
+        </div>
+        <div class="action-filter-item">
+          <input type="checkbox" id="save" checked>
+          <label for="save">save</label>
+        </div>
+        <div class="action-filter-item">
+          <input type="checkbox" id="saveCapital" checked>
+          <label for="saveCapital">Save</label>
+        </div>
+        <div class="action-filter-item">
+          <input type="checkbox" id="saveUppercase" checked>
+          <label for="saveUppercase">SAVE</label>
+        </div>
+
+        <div class="custom-action">
+          <div class="flex-row">
+            <input type="text" id="customAction" placeholder="Ajouter une action personnalisée">
+            <button id="addCustomActionBtn" class="small secondary">Ajouter</button>
+          </div>
+          <div id="customActionsList" class="custom-actions-list hidden"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="form-group">
       <label>Plage de temps:</label>
       <div class="time-range">
@@ -164,9 +277,9 @@
             <option value="15m">15 minutes</option>
             <option value="1h">1 heure</option>
             <option value="4h">4 heures</option>
-            <option value="1d" selected>1 jour</option>
+            <option value="1d">1 jour</option>
             <option value="7d">7 jours</option>
-            <option value="30d">30 jours</option>
+            <option value="30d" selected>30 jours</option>
             <option value="custom">Personnalisé</option>
           </select>
         </div>
@@ -183,18 +296,19 @@
     </div>
     
     <div id="alertError" class="alert alert-danger">
-      Veuillez saisir un Action Target Name.
+      Veuillez saisir un View Name.
     </div>
     
     <div id="result" class="result hidden">
       <h3>Lien généré:</h3>
-      <p id="generatedLink"></p>
+      <p id="generatedLink" style="word-break: break-all;"></p>
     </div>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const actionTargetInput = document.getElementById('actionTarget');
+      const viewNameInput = document.getElementById('viewName');
+      const applicationIdInput = document.getElementById('applicationId');
       const timeRangeSelect = document.getElementById('timeRange');
       const generateBtn = document.getElementById('generateBtn');
       const copyBtn = document.getElementById('copyBtn');
@@ -202,8 +316,12 @@
       const generatedLinkEl = document.getElementById('generatedLink');
       const alertSuccess = document.getElementById('alertSuccess');
       const alertError = document.getElementById('alertError');
+      const customActionInput = document.getElementById('customAction');
+      const addCustomActionBtn = document.getElementById('addCustomActionBtn');
+      const customActionsList = document.getElementById('customActionsList');
       
       let generatedLink = '';
+      let customActions = [];
       
       // Calculate timestamp ranges (in milliseconds)
       function getTimeRange(option) {
@@ -220,12 +338,48 @@
         
         return ranges[option];
       }
+
+      // Add custom action
+      function addCustomAction() {
+        const action = customActionInput.value.trim();
+        if (action && !customActions.includes(action)) {
+          customActions.push(action);
+          renderCustomActions();
+          customActionInput.value = '';
+          customActionsList.classList.remove('hidden');
+        }
+      }
+
+      // Render custom actions list
+      function renderCustomActions() {
+        customActionsList.innerHTML = '';
+        customActions.forEach((action, index) => {
+          const tag = document.createElement('span');
+          tag.className = 'custom-action-tag';
+          tag.innerHTML = `${action} <button data-index="${index}">×</button>`;
+          customActionsList.appendChild(tag);
+        });
+
+        // Add event listeners to remove buttons
+        const removeButtons = customActionsList.querySelectorAll('button');
+        removeButtons.forEach(btn => {
+          btn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            customActions.splice(index, 1);
+            renderCustomActions();
+            if (customActions.length === 0) {
+              customActionsList.classList.add('hidden');
+            }
+          });
+        });
+      }
       
       // Generate the Datadog RUM link
       function generateLink() {
-        const actionTarget = actionTargetInput.value.trim();
+        const viewName = viewNameInput.value.trim();
+        const applicationId = applicationIdInput.value.trim();
         
-        if (!actionTarget) {
+        if (!viewName) {
           alertError.style.display = 'block';
           setTimeout(() => {
             alertError.style.display = 'none';
@@ -234,9 +388,38 @@
         }
         
         const timeRange = getTimeRange(timeRangeSelect.value);
-        const encodedTarget = encodeURIComponent(`@type:action @action.target.name:"${actionTarget}"`);
         
-        generatedLink = `https://app.datadoghq.eu/rum/sessions?query=${encodedTarget}&agg_m=count&agg_m_source=base&agg_t=count&fromUser=true&viz=stream&from_ts=${timeRange.from}&to_ts=${timeRange.to}&live=true`;
+        // Build action names query
+        let actionNames = [];
+        
+        if (document.getElementById('clickOnSave').checked) {
+          actionNames.push('"click on Save"');
+        }
+        if (document.getElementById('clickOnCancelSave').checked) {
+          actionNames.push('"click on Cancel Save"');
+        }
+        if (document.getElementById('save').checked) {
+          actionNames.push('"save"');
+        }
+        if (document.getElementById('saveCapital').checked) {
+          actionNames.push('"Save"');
+        }
+        if (document.getElementById('saveUppercase').checked) {
+          actionNames.push('"SAVE"');
+        }
+        
+        // Add custom actions
+        customActions.forEach(action => {
+          actionNames.push(`"${action}"`);
+        });
+        
+        const actionNamesQuery = actionNames.join(' OR ');
+        
+        // Build the full query
+        const query = `@type:action @application.id:${applicationId} @view.name:*${viewName}* @action.name:(${actionNamesQuery})`;
+        const encodedQuery = encodeURIComponent(query);
+        
+        generatedLink = `https://app.datadoghq.eu/rum/sessions?query=${encodedQuery}&agg_m=count&agg_m_source=base&agg_q=%40usr.name&agg_q_source=base&agg_t=count&fromUser=true&top_n=500&top_o=top&track=rum&viz=toplist&x_missing=true&from_ts=${timeRange.from}&to_ts=${timeRange.to}&live=true`;
         
         generatedLinkEl.textContent = generatedLink;
         resultDiv.classList.remove('hidden');
@@ -255,6 +438,14 @@
       
       generateBtn.addEventListener('click', generateLink);
       copyBtn.addEventListener('click', copyToClipboard);
+      addCustomActionBtn.addEventListener('click', addCustomAction);
+      
+      // Allow adding custom action with Enter key
+      customActionInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          addCustomAction();
+        }
+      });
     });
   </script>
 </body>
