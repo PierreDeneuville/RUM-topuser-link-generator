@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Générateur de liens Datadog RUM pour View Name</title>
+  <title>Datadog RUM Link Generator for View Name</title>
   <style>
     :root {
       --primary: #632CA6;
@@ -173,30 +173,11 @@
       font-size: 0.85rem;
     }
     
-    .result {
-      margin-top: 2rem;
-      padding: 1rem;
-      background-color: #f8f9fa;
-      border-radius: 4px;
-      border-left: 4px solid var(--primary);
-    }
-    
-    .result h3 {
-      margin-top: 0;
-      color: var(--dark);
-    }
-    
     .alert {
       padding: 0.75rem 1rem;
       margin: 1rem 0;
       border-radius: 4px;
       display: none;
-    }
-    
-    .alert-success {
-      background-color: rgba(40, 167, 69, 0.15);
-      border-left: 4px solid var(--success);
-      color: var(--success);
     }
     
     .alert-danger {
@@ -222,21 +203,16 @@
       <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 32">
         <path fill="#632CA6" d="M15.3 4.8c6.1 0 11 4.95 11 11.05 0 6.1-4.95 11.05-11.05 11.05S4.25 22 4.25 15.9c0-6.15 4.95-11.1 11.05-11.1zm0 4.6a6.61 6.61 0 0 0-6.45 6.45c0 3.5 2.9 6.45 6.45 6.45 3.5 0 6.45-2.9 6.45-6.45 0-3.55-2.9-6.45-6.45-6.45zm0 3.25a3.21 3.21 0 0 1 0 6.4 3.21 3.21 0 0 1 0-6.4z"/>
       </svg>
-      Générateur de liens Datadog RUM - View Name
+      Datadog RUM Link Generator - View Name
     </h1>
     
     <div class="form-group">
       <label for="viewName">View Name:</label>
-      <input type="text" id="viewName" placeholder="Exemple: Broom">
+      <input type="text" id="viewName" placeholder="Example: Broom">
     </div>
 
     <div class="form-group">
-      <label for="applicationId">Application ID (do not change):</label>
-      <input type="text" id="applicationId" value="dfbd2373-17d3-4c3b-ad34-5bd9b0a27e19">
-    </div>
-    
-    <div class="form-group">
-      <label>Actions de sauvegarde:</label>
+      <label>Save Actions:</label>
       <div class="action-filters">
         <div class="action-filter-item">
           <input type="checkbox" id="clickOnSave" checked>
@@ -261,8 +237,8 @@
 
         <div class="custom-action">
           <div class="flex-row">
-            <input type="text" id="customAction" placeholder="Ajouter une action personnalisée">
-            <button id="addCustomActionBtn" class="small secondary">Ajouter</button>
+            <input type="text" id="customAction" placeholder="Add a custom action">
+            <button id="addCustomActionBtn" class="small secondary">Add</button>
           </div>
           <div id="customActionsList" class="custom-actions-list hidden"></div>
         </div>
@@ -270,57 +246,43 @@
     </div>
 
     <div class="form-group">
-      <label>Plage de temps:</label>
+      <label>Time Range:</label>
       <div class="time-range">
         <div>
           <select id="timeRange" class="form-control">
             <option value="15m">15 minutes</option>
-            <option value="1h">1 heure</option>
-            <option value="4h">4 heures</option>
-            <option value="1d">1 jour</option>
-            <option value="7d">7 jours</option>
-            <option value="30d" selected>30 jours</option>
-            <option value="custom">Personnalisé</option>
+            <option value="1h">1 hour</option>
+            <option value="4h">4 hours</option>
+            <option value="1d">1 day</option>
+            <option value="7d">7 days</option>
+            <option value="30d" selected>30 days</option>
+            <option value="custom">Custom</option>
           </select>
         </div>
       </div>
     </div>
     
     <div class="flex-row">
-      <button id="generateBtn">Générer le lien</button>
-      <button id="copyBtn" class="hidden">Copier le lien</button>
-    </div>
-    
-    <div id="alertSuccess" class="alert alert-success">
-      Lien copié dans le presse-papiers !
+      <button id="generateBtn">Generate and Open Link</button>
     </div>
     
     <div id="alertError" class="alert alert-danger">
-      Veuillez saisir un View Name.
-    </div>
-    
-    <div id="result" class="result hidden">
-      <h3>Lien généré:</h3>
-      <p id="generatedLink" style="word-break: break-all;"></p>
+      Please enter a View Name.
     </div>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const viewNameInput = document.getElementById('viewName');
-      const applicationIdInput = document.getElementById('applicationId');
       const timeRangeSelect = document.getElementById('timeRange');
       const generateBtn = document.getElementById('generateBtn');
-      const copyBtn = document.getElementById('copyBtn');
-      const resultDiv = document.getElementById('result');
-      const generatedLinkEl = document.getElementById('generatedLink');
-      const alertSuccess = document.getElementById('alertSuccess');
       const alertError = document.getElementById('alertError');
       const customActionInput = document.getElementById('customAction');
       const addCustomActionBtn = document.getElementById('addCustomActionBtn');
       const customActionsList = document.getElementById('customActionsList');
       
-      let generatedLink = '';
+      // Application ID hidden from UI but still used in link generation
+      const applicationId = "dfbd2373-17d3-4c3b-ad34-5bd9b0a27e19";
       let customActions = [];
       
       // Calculate timestamp ranges (in milliseconds)
@@ -374,10 +336,9 @@
         });
       }
       
-      // Generate the Datadog RUM link
-      function generateLink() {
+      // Generate the Datadog RUM link and open in new tab
+      function generateAndOpenLink() {
         const viewName = viewNameInput.value.trim();
-        const applicationId = applicationIdInput.value.trim();
         
         if (!viewName) {
           alertError.style.display = 'block';
@@ -419,25 +380,13 @@
         const query = `@type:action @application.id:${applicationId} @view.name:*${viewName}* @action.name:(${actionNamesQuery})`;
         const encodedQuery = encodeURIComponent(query);
         
-        generatedLink = `https://app.datadoghq.eu/rum/sessions?query=${encodedQuery}&agg_m=count&agg_m_source=base&agg_q=%40usr.name&agg_q_source=base&agg_t=count&fromUser=true&top_n=500&top_o=top&track=rum&viz=toplist&x_missing=true&from_ts=${timeRange.from}&to_ts=${timeRange.to}&live=true`;
+        const generatedLink = `https://app.datadoghq.eu/rum/sessions?query=${encodedQuery}&agg_m=count&agg_m_source=base&agg_q=%40usr.name&agg_q_source=base&agg_t=count&fromUser=true&top_n=500&top_o=top&track=rum&viz=toplist&x_missing=true&from_ts=${timeRange.from}&to_ts=${timeRange.to}&live=true`;
         
-        generatedLinkEl.textContent = generatedLink;
-        resultDiv.classList.remove('hidden');
-        copyBtn.classList.remove('hidden');
+        // Open the link in a new tab
+        window.open(generatedLink, '_blank');
       }
       
-      // Copy link to clipboard
-      function copyToClipboard() {
-        navigator.clipboard.writeText(generatedLink).then(() => {
-          alertSuccess.style.display = 'block';
-          setTimeout(() => {
-            alertSuccess.style.display = 'none';
-          }, 3000);
-        });
-      }
-      
-      generateBtn.addEventListener('click', generateLink);
-      copyBtn.addEventListener('click', copyToClipboard);
+      generateBtn.addEventListener('click', generateAndOpenLink);
       addCustomActionBtn.addEventListener('click', addCustomAction);
       
       // Allow adding custom action with Enter key
