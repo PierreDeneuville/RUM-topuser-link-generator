@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Datadog RUM Link Generator for View Name</title>
+  <title>Datadog RUM Link Generator</title>
   <style>
     :root {
       --primary: #632CA6;
@@ -13,6 +13,8 @@
       --dark: #343a40;
       --success: #28a745;
       --danger: #dc3545;
+      --info: #17a2b8;
+      --warning: #ffc107;
     }
     
     body {
@@ -27,8 +29,8 @@
     }
     
     .container {
-      width: 90%;
-      max-width: 800px;
+      width: 95%;
+      max-width: 900px;
       background-color: white;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -46,6 +48,37 @@
       height: 30px;
       margin-right: 10px;
       vertical-align: bottom;
+    }
+    
+    .nav-tabs {
+      display: flex;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #dee2e6;
+    }
+    
+    .nav-tab {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    
+    .nav-tab:hover {
+      color: var(--primary);
+    }
+    
+    .nav-tab.active {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      font-weight: bold;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
     }
     
     .form-group {
@@ -204,6 +237,194 @@
     .hidden {
       display: none;
     }
+    
+    .mt-4 {
+      margin-top: 2rem;
+    }
+    
+    .alert.success {
+      background-color: rgba(40, 167, 69, 0.15);
+      border-left: 4px solid var(--success);
+      color: var(--success);
+      display: block;
+    }
+    
+    .alert.warning {
+      background-color: rgba(255, 193, 7, 0.15);
+      border-left: 4px solid var(--warning);
+      color: #856404;
+      display: block;
+    }
+    
+    .datadog-link {
+      color: var(--primary);
+      text-decoration: underline;
+      font-weight: 500;
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
+    
+    .datadog-link:hover {
+      color: var(--primary-dark);
+    }
+    
+    .search-box {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    
+    .search-box input {
+      padding-left: 2.5rem;
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 0.75rem;
+      color: #6c757d;
+    }
+    
+    .popular-views {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .popular-view-card {
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .popular-view-card:hover {
+      border-color: var(--secondary);
+      box-shadow: 0 2px 6px rgba(119, 77, 203, 0.2);
+    }
+    
+    .popular-view-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1rem;
+      color: var(--primary);
+    }
+    
+    .popular-view-card p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #6c757d;
+    }
+    
+    .view-count {
+      font-weight: bold;
+      color: var(--dark);
+    }
+    
+    .app-section {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #dee2e6;
+    }
+    
+    .app-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .app-filter-btn {
+      background-color: #e9ecef;
+      border: none;
+      padding: 0.4rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .app-filter-btn:hover {
+      background-color: #d1d3d6;
+    }
+    
+    .app-filter-btn.active {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .view-type-badge {
+      display: inline-block;
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      margin-right: 0.5rem;
+      color: white;
+    }
+    
+    .badge-broom {
+      background-color: var(--primary);
+    }
+    
+    .badge-bres {
+      background-color: var(--info);
+    }
+    
+    .badge-bpro {
+      background-color: var(--success);
+    }
+    
+    .badge-bob {
+      background-color: var(--warning);
+    }
+    
+    .badge-bset {
+      background-color: #fd7e14;
+    }
+    
+    .badge-dcc {
+      background-color: #20c997;
+    }
+    
+    .view-details {
+      font-size: 0.8rem;
+      color: #6c757d;
+      margin-top: 0.5rem;
+    }
+    
+    .view-path {
+      font-family: monospace;
+      background-color: #f8f9fa;
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+    }
+    
+    .recent-searches {
+      margin-top: 1rem;
+    }
+    
+    .recent-search-chip {
+      display: inline-block;
+      background-color: #e9ecef;
+      padding: 0.3rem 0.6rem;
+      border-radius: 16px;
+      font-size: 0.85rem;
+      margin: 0.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .recent-search-chip:hover {
+      background-color: #d1d3d6;
+    }
+    
+    .recent-search-chip .remove {
+      margin-left: 0.3rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -212,43 +433,42 @@
       <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 32">
         <path fill="#632CA6" d="M15.3 4.8c6.1 0 11 4.95 11 11.05 0 6.1-4.95 11.05-11.05 11.05S4.25 22 4.25 15.9c0-6.15 4.95-11.1 11.05-11.1zm0 4.6a6.61 6.61 0 0 0-6.45 6.45c0 3.5 2.9 6.45 6.45 6.45 3.5 0 6.45-2.9 6.45-6.45 0-3.55-2.9-6.45-6.45-6.45zm0 3.25a3.21 3.21 0 0 1 0 6.4 3.21 3.21 0 0 1 0-6.4z"/>
       </svg>
-      Datadog RUM Link Generator - View Name
+      Datadog RUM Link Generator
     </h1>
     
-    <div class="form-group">
-      <label for="viewName">View Name:</label>
-      <input type="text" id="viewName" placeholder="Example: Broom">
+    <div class="nav-tabs">
+      <div class="nav-tab active" data-tab="popular-views">Popular Views</div>
+      <div class="nav-tab" data-tab="custom-view">Custom View</div>
     </div>
-
-    <div class="form-group">
-      <label>Action Filters:</label>
-      <div class="action-filters">
-        <div class="action-filter-item">
-          <input type="checkbox" id="saveActions" checked>
-          <label for="saveActions">Save actions</label>
-          <div class="action-description">Most popular action labels like "save", "Save", "SAVE", "click on Save", etc.</div>
+    
+    <div id="popularViewsTab" class="tab-content active">
+      <div class="app-section">
+        <label>Filter by Application:</label>
+        <div class="app-filter">
+          <button class="app-filter-btn active" data-app="all">All</button>
+          <button class="app-filter-btn" data-app="broom">Broom</button>
+          <button class="app-filter-btn" data-app="bres">Bres</button>
+          <button class="app-filter-btn" data-app="bpro">Bpro</button>
+          <button class="app-filter-btn" data-app="bob">Bob</button>
+          <button class="app-filter-btn" data-app="bset">Bset</button>
+          <button class="app-filter-btn" data-app="dcc">DCC</button>
+          <button class="app-filter-btn" data-app="alerts">Alerts</button>
         </div>
-        <div class="action-filter-item">
-          <input type="checkbox" id="allActions">
-          <label for="allActions">All actions</label>
-          <div class="action-description">Include all actions for this view</div>
-        </div>
-
-        <div class="custom-action">
-          <div class="flex-row">
-            <input type="text" id="customAction" placeholder="Add a custom action">
-            <button id="addCustomActionBtn" class="small secondary">Add</button>
+        
+        <div class="search-box">
+          <div class="search-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
           </div>
-          <div id="customActionsList" class="custom-actions-list hidden"></div>
+          <input type="text" id="viewSearch" placeholder="Search views...">
         </div>
       </div>
-    </div>
-
-    <div class="form-group">
-      <label>Time Range:</label>
+      
       <div class="time-range">
         <div>
-          <select id="timeRange" class="form-control">
+          <label for="timeRangePopular">Time Range:</label>
+          <select id="timeRangePopular" class="form-control">
             <option value="15m">15 minutes</option>
             <option value="1h">1 hour</option>
             <option value="4h">4 hours</option>
@@ -259,19 +479,121 @@
           </select>
         </div>
       </div>
+      
+      <div class="popular-views" id="popularViewsList">
+        <!-- Popular views will be populated here dynamically -->
+      </div>
+      
+      <div class="recent-searches">
+        <label>Recent searches:</label>
+        <div id="recentSearches">
+          <!-- Recent searches will be populated here dynamically -->
+        </div>
+      </div>
+      
+      <div class="form-group mt-4">
+        <label>Upload latest usage data:</label>
+        <div class="flex-row">
+          <input type="file" id="csvFileUpload" accept=".csv">
+          <button id="uploadCsvBtn" class="small">Upload</button>
+        </div>
+        <div class="action-description">
+          Upload a CSV file with view usage data to update the popular views list<br>
+          <a href="https://app.datadoghq.eu/rum/sessions?query=%40type%3Aaction%20%40application.id%3Adfbd2373-17d3-4c3b-ad34-5bd9b0a27e19&agg_m=count&agg_m_source=base&agg_q=%40view.name&agg_q_source=base&agg_t=count&fromUser=false&top_n=500&top_o=top&track=rum&viz=toplist&x_missing=true&from_ts=1741903329321&to_ts=1744495329321&live=true" target="_blank" class="datadog-link">
+            Click here to get latest 1-month view usage data from Datadog RUM
+          </a>
+        </div>
+        <div id="uploadStatus" class="alert hidden"></div>
+      </div>
     </div>
     
-    <div class="flex-row">
-      <button id="generateBtn">Generate and Open Link</button>
-    </div>
-    
-    <div id="alertError" class="alert alert-danger">
-      Please enter a View Name.
+    <div id="customViewTab" class="tab-content">
+      <div class="form-group">
+        <label for="viewName">View Name:</label>
+        <input type="text" id="viewName" placeholder="Example: Broom">
+      </div>
+
+      <div class="form-group">
+        <label>Action Filters:</label>
+        <div class="action-filters">
+          <div class="action-filter-item">
+            <input type="radio" id="allActions" name="actionFilter" checked>
+            <label for="allActions">All actions</label>
+            <div class="action-description">Include all actions for this view</div>
+          </div>
+          <div class="action-filter-item">
+            <input type="radio" id="saveActions" name="actionFilter">
+            <label for="saveActions">Save actions</label>
+            <div class="action-description">Most popular action labels like "save", "Save", "SAVE", "click on Save", etc.</div>
+          </div>
+          <div class="action-filter-item">
+            <input type="radio" id="customActionsRadio" name="actionFilter">
+            <label for="customActionsRadio">Custom actions</label>
+            <div class="action-description">Define your own custom action names</div>
+          </div>
+
+          <div class="custom-action">
+            <div class="flex-row">
+              <input type="text" id="customAction" placeholder="Add a custom action">
+              <button id="addCustomActionBtn" class="small secondary">Add</button>
+            </div>
+            <div id="customActionsList" class="custom-actions-list hidden"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Time Range:</label>
+        <div class="time-range">
+          <div>
+            <select id="timeRange" class="form-control">
+              <option value="15m">15 minutes</option>
+              <option value="1h">1 hour</option>
+              <option value="4h">4 hours</option>
+              <option value="1d">1 day</option>
+              <option value="7d">7 days</option>
+              <option value="30d" selected>30 days</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex-row">
+        <button id="generateBtn">Generate and Open Link</button>
+      </div>
+      
+      <div id="alertError" class="alert alert-danger">
+        Please enter a View Name.
+      </div>
     </div>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Tab navigation
+      const navTabs = document.querySelectorAll('.nav-tab');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      navTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          
+          // Remove active class from all tabs and contents
+          navTabs.forEach(t => t.classList.remove('active'));
+          tabContents.forEach(c => c.classList.remove('active'));
+          
+          // Add active class to current tab and content
+          this.classList.add('active');
+          if (tabId === 'popular-views') {
+            document.getElementById('popularViewsTab').classList.add('active');
+          } else {
+            document.getElementById('customViewTab').classList.add('active');
+          }
+        });
+      });
+      
+      // Custom View Tab Elements
       const viewNameInput = document.getElementById('viewName');
       const timeRangeSelect = document.getElementById('timeRange');
       const generateBtn = document.getElementById('generateBtn');
@@ -282,9 +604,20 @@
       const addCustomActionBtn = document.getElementById('addCustomActionBtn');
       const customActionsList = document.getElementById('customActionsList');
       
+      // Popular Views Tab Elements
+      const popularViewsList = document.getElementById('popularViewsList');
+      const timeRangePopularSelect = document.getElementById('timeRangePopular');
+      const saveActionsPopularCheckbox = document.getElementById('saveActionsPopular');
+      const allActionsPopularCheckbox = document.getElementById('allActionsPopular');
+      const viewSearchInput = document.getElementById('viewSearch');
+      const appFilterBtns = document.querySelectorAll('.app-filter-btn');
+      const recentSearchesContainer = document.getElementById('recentSearches');
+      
       // Application ID hidden from UI but still used in link generation
       const applicationId = "dfbd2373-17d3-4c3b-ad34-5bd9b0a27e19";
       let customActions = [];
+      let recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+      let currentAppFilter = 'all';
       
       // Predefined save actions
       const saveActionsList = [
@@ -294,6 +627,163 @@
         "Save",
         "SAVE"
       ];
+      
+      // Popular view data with counts
+      const popularViewsData = [
+        { name: "/broom/match-details-tab/live", count: 471813, app: "broom" },
+        { name: "/broom/prematch", count: 436808, app: "broom" },
+        { name: "/bres/prematch", count: 387032, app: "bres" },
+        { name: "/alerts", count: 230807, app: "alerts" },
+        { name: "/bpro/shield/console", count: 223173, app: "bpro" },
+        { name: "/broom/live", count: 120905, app: "broom" },
+        { name: "/bpro/bet-inspector", count: 87646, app: "bpro" },
+        { name: "/bres/match-details-tab/prematch", count: 70345, app: "bres" },
+        { name: "/bob/match-creation", count: 58362, app: "bob" },
+        { name: "/broom/match-details-tab/prematch", count: 44150, app: "broom" },
+        { name: "/broom/providers", count: 41237, app: "broom" },
+        { name: "/bres/live", count: 38182, app: "bres" },
+        { name: "/bset/inventory/players", count: 26107, app: "bset" },
+        { name: "/bres/match-details-tab/live", count: 23876, app: "bres" },
+        { name: "/bob/import-files/offer", count: 23265, app: "bob" },
+        { name: "/bset/inventory/players/create", count: 19907, app: "bset" },
+        { name: "/bset/inventory/teams/create", count: 19466, app: "bset" },
+        { name: "/bset/inventory/teams", count: 17654, app: "bset" },
+        { name: "/broom/streams", count: 15677, app: "broom" },
+        { name: "/bset/provider-management/streaming-mapping", count: 13505, app: "bset" },
+        { name: "/dcc/translation/contestant/update/?", count: 12595, app: "dcc" },
+        { name: "/dcc/visuals/explorer", count: 11215, app: "dcc" },
+        { name: "/bset/inventory/players/edit/?", count: 11147, app: "bset" },
+        { name: "/bset/inventory/teams/edit/?", count: 10494, app: "bset" },
+        { name: "/dcc/visuals/matches/update/?", count: 10383, app: "dcc" }
+      ];
+      
+      // Populate popular views
+      function renderPopularViews(searchTerm = '', appFilter = 'all') {
+        popularViewsList.innerHTML = '';
+        
+        const filteredViews = popularViewsData.filter(view => {
+          // Apply search filter
+          const matchesSearch = view.name.toLowerCase().includes(searchTerm.toLowerCase());
+          
+          // Apply app filter
+          const matchesApp = appFilter === 'all' || view.name.startsWith(`/${appFilter}`);
+          
+          return matchesSearch && matchesApp;
+        });
+        
+        if (filteredViews.length === 0) {
+          popularViewsList.innerHTML = '<p>No views match your search criteria.</p>';
+          return;
+        }
+        
+        filteredViews.forEach(view => {
+          const viewCard = document.createElement('div');
+          viewCard.className = 'popular-view-card';
+          viewCard.setAttribute('data-view', view.name);
+          
+          // Determine app type for badge
+          let appType = 'other';
+          let badgeClass = 'badge-other';
+          
+          if (view.name.startsWith('/broom')) {
+            appType = 'broom';
+            badgeClass = 'badge-broom';
+          } else if (view.name.startsWith('/bres')) {
+            appType = 'bres';
+            badgeClass = 'badge-bres';
+          } else if (view.name.startsWith('/bpro')) {
+            appType = 'bpro';
+            badgeClass = 'badge-bpro';
+          } else if (view.name.startsWith('/bob')) {
+            appType = 'bob';
+            badgeClass = 'badge-bob';
+          } else if (view.name.startsWith('/bset')) {
+            appType = 'bset';
+            badgeClass = 'badge-bset';
+          } else if (view.name.startsWith('/dcc')) {
+            appType = 'dcc';
+            badgeClass = 'badge-dcc';
+          } else if (view.name.startsWith('/alerts')) {
+            appType = 'alerts';
+            badgeClass = 'badge-alerts';
+          }
+          
+          // Get shortened name (last part of path)
+          const pathParts = view.name.split('/');
+          const shortName = pathParts[pathParts.length - 1] === '' ? 
+                            pathParts[pathParts.length - 2] : 
+                            pathParts[pathParts.length - 1];
+          
+          viewCard.innerHTML = `
+            <div>
+              <span class="view-type-badge ${badgeClass}">${appType}</span>
+              <h3>${shortName}</h3>
+              <p><span class="view-count">${view.count.toLocaleString()}</span> actions</p>
+              <div class="view-details">
+                <span class="view-path">${view.name}</span>
+              </div>
+            </div>
+          `;
+          
+          viewCard.addEventListener('click', function() {
+            const viewName = this.getAttribute('data-view');
+            
+            // Save to recent searches
+            if (!recentSearches.includes(viewName)) {
+              recentSearches.unshift(viewName);
+              if (recentSearches.length > 5) {
+                recentSearches.pop();
+              }
+              localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+              renderRecentSearches();
+            }
+            
+            // Generate and open link with this view
+            generateAndOpenLinkWithView(viewName);
+          });
+          
+          popularViewsList.appendChild(viewCard);
+        });
+      }
+      
+      // Render recent searches
+      function renderRecentSearches() {
+        recentSearchesContainer.innerHTML = '';
+        
+        if (recentSearches.length === 0) {
+          return;
+        }
+        
+        recentSearches.forEach((search, index) => {
+          const chip = document.createElement('span');
+          chip.className = 'recent-search-chip';
+          chip.innerHTML = `${search} <span class="remove" data-index="${index}">×</span>`;
+          
+          chip.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('remove')) {
+              generateAndOpenLinkWithView(search);
+            }
+          });
+          
+          recentSearchesContainer.appendChild(chip);
+        });
+        
+        // Add event listeners to remove buttons
+        const removeButtons = recentSearchesContainer.querySelectorAll('.remove');
+        removeButtons.forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const index = parseInt(this.getAttribute('data-index'));
+            recentSearches.splice(index, 1);
+            localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+            renderRecentSearches();
+          });
+        });
+      }
+      
+      // Initialize popular views and recent searches
+      renderPopularViews();
+      renderRecentSearches();
       
       // Calculate timestamp ranges (in milliseconds)
       function getTimeRange(option) {
@@ -346,7 +836,7 @@
         });
       }
       
-      // Generate the Datadog RUM link and open in new tab
+      // Generate the Datadog RUM link and open in new tab for custom view
       function generateAndOpenLink() {
         const viewName = viewNameInput.value.trim();
         
@@ -361,32 +851,11 @@
         const timeRange = getTimeRange(timeRangeSelect.value);
         
         // Build the action name part of the query
-        let actionNamesPart;
-        
-        if (allActionsCheckbox.checked) {
-          // If "All actions" is checked, use wildcard
-          actionNamesPart = "***";
-        } else if (saveActionsCheckbox.checked || customActions.length > 0) {
-          // If "Save actions" is checked or there are custom actions
-          let actionNames = [];
-          
-          // Add save actions if the checkbox is checked
-          if (saveActionsCheckbox.checked) {
-            saveActionsList.forEach(action => {
-              actionNames.push(`"${action}"`);
-            });
-          }
-          
-          // Add custom actions
-          customActions.forEach(action => {
-            actionNames.push(`"${action}"`);
-          });
-          
-          actionNamesPart = actionNames.join(' OR ');
-        } else {
-          // Default to all actions if nothing is selected
-          actionNamesPart = "***";
-        }
+        let actionNamesPart = buildActionNamesPart(
+          document.getElementById('allActions').checked,
+          document.getElementById('saveActions').checked,
+          document.getElementById('customActionsRadio').checked ? customActions : []
+        );
         
         // Build the full query
         const query = `@type:action @application.id:${applicationId} @view.name:*${viewName}* @action.name:(${actionNamesPart})`;
@@ -396,11 +865,94 @@
         
         // Open the link in a new tab
         window.open(generatedLink, '_blank');
+        
+        // Save to recent searches if not already there
+        if (!recentSearches.includes(viewName)) {
+          recentSearches.unshift(viewName);
+          if (recentSearches.length > 5) {
+            recentSearches.pop();
+          }
+          localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+          renderRecentSearches();
+        }
       }
       
-      // Add event listeners
+      // Helper function to build action names part of query
+      function buildActionNamesPart(allActions, saveActions, customActionsList) {
+        if (allActions) {
+          // If "All actions" is checked, use wildcard
+          return "***";
+        } else if (saveActions) {
+          // If "Save actions" is checked
+          let actionNames = [];
+          
+          // Add save actions
+          saveActionsList.forEach(action => {
+            actionNames.push(`"${action}"`);
+          });
+          
+          return actionNames.join(' OR ');
+        } else if (customActionsList && customActionsList.length > 0) {
+          // If custom actions are provided
+          let actionNames = [];
+          
+          // Add custom actions
+          customActionsList.forEach(action => {
+            actionNames.push(`"${action}"`);
+          });
+          
+          return actionNames.join(' OR ');
+        } else {
+          // Default to all actions if nothing is selected
+          return "***";
+        }
+      }
+      
+      // Generate link for a selected popular view
+      function generateAndOpenLinkWithView(viewName) {
+        const timeRange = getTimeRange(timeRangePopularSelect.value);
+        
+        // Use "All actions" for popular views (always use wildcard)
+        const actionNamesPart = "***";
+        
+        // Build the full query
+        const query = `@type:action @application.id:${applicationId} @view.name:${viewName} @action.name:(${actionNamesPart})`;
+        const encodedQuery = encodeURIComponent(query);
+        
+        const generatedLink = `https://app.datadoghq.eu/rum/sessions?query=${encodedQuery}&agg_m=count&agg_m_source=base&agg_q=%40usr.name&agg_q_source=base&agg_t=count&fromUser=true&top_n=500&top_o=top&track=rum&viz=toplist&x_missing=true&from_ts=${timeRange.from}&to_ts=${timeRange.to}&live=true`;
+        
+        // Open the link in a new tab
+        window.open(generatedLink, '_blank');
+      }
+      
+      // Event Listeners
+      
+      // Custom view tab
       generateBtn.addEventListener('click', generateAndOpenLink);
       addCustomActionBtn.addEventListener('click', addCustomAction);
+      
+      // Show/hide custom action input based on radio selection
+      document.getElementById('customActionsRadio').addEventListener('change', function() {
+        if (this.checked) {
+          document.querySelector('.custom-action').style.display = 'block';
+        }
+      });
+      
+      document.getElementById('allActions').addEventListener('change', function() {
+        if (this.checked) {
+          document.querySelector('.custom-action').style.display = 'none';
+        }
+      });
+      
+      document.getElementById('saveActions').addEventListener('change', function() {
+        if (this.checked) {
+          document.querySelector('.custom-action').style.display = 'none';
+        }
+      });
+      
+      // Initially hide custom action input if not selected
+      document.querySelector('.custom-action').style.display = 
+        document.getElementById('customActionsRadio').checked ? 'block' : 'none';
       
       // Allow adding custom action with Enter key
       customActionInput.addEventListener('keypress', function(e) {
@@ -408,6 +960,139 @@
           addCustomAction();
         }
       });
+      
+      // Popular views tab
+      viewSearchInput.addEventListener('input', function() {
+        renderPopularViews(this.value, currentAppFilter);
+      });
+      
+      // App filter buttons
+      appFilterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const app = this.getAttribute('data-app');
+          currentAppFilter = app;
+          
+          // Update active state
+          appFilterBtns.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Rerender views with current search and app filter
+          renderPopularViews(viewSearchInput.value, app);
+        });
+      });
+      
+      // File upload functionality
+      const csvFileUpload = document.getElementById('csvFileUpload');
+      const uploadCsvBtn = document.getElementById('uploadCsvBtn');
+      const uploadStatus = document.getElementById('uploadStatus');
+      
+      uploadCsvBtn.addEventListener('click', function() {
+        const file = csvFileUpload.files[0];
+        if (!file) {
+          showUploadStatus('Please select a CSV file first.', 'danger');
+          return;
+        }
+        
+        if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+          showUploadStatus('Please upload a valid CSV file.', 'danger');
+          return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const csvData = e.target.result;
+            processUploadedCsvData(csvData);
+          } catch (error) {
+            console.error('Error processing CSV:', error);
+            showUploadStatus('Error processing CSV file. Please ensure it is properly formatted.', 'danger');
+          }
+        };
+        
+        reader.onerror = function() {
+          showUploadStatus('Error reading file.', 'danger');
+        };
+        
+        reader.readAsText(file);
+      });
+      
+      // Process the uploaded CSV data
+      function processUploadedCsvData(csvData) {
+        // Parse CSV
+        const lines = csvData.split('\n');
+        const headers = lines[0].split(',');
+        
+        // Find the index of the group and value columns
+        const groupIndex = headers.indexOf('group');
+        const valueIndex = headers.indexOf('value');
+        
+        if (groupIndex === -1 || valueIndex === -1) {
+          showUploadStatus('CSV format not recognized. Please ensure it contains "group" and "value" columns.', 'danger');
+          return;
+        }
+        
+        // Extract view names and counts
+        const newViewsData = [];
+        for (let i = 1; i < lines.length; i++) {
+          if (!lines[i].trim()) continue;
+          
+          const columns = lines[i].split(',');
+          const viewPath = columns[groupIndex].trim();
+          const count = parseInt(columns[valueIndex].trim(), 10);
+          
+          if (viewPath.startsWith('@view.name:')) {
+            const name = viewPath.replace('@view.name:', '');
+            
+            // Determine app type
+            let app = 'other';
+            if (name.startsWith('/broom')) app = 'broom';
+            else if (name.startsWith('/bres')) app = 'bres';
+            else if (name.startsWith('/bpro')) app = 'bpro';
+            else if (name.startsWith('/bob')) app = 'bob';
+            else if (name.startsWith('/bset')) app = 'bset';
+            else if (name.startsWith('/dcc')) app = 'dcc';
+            else if (name.startsWith('/alerts')) app = 'alerts';
+            
+            newViewsData.push({ name, count, app });
+          }
+        }
+        
+        if (newViewsData.length === 0) {
+          showUploadStatus('No valid view data found in CSV.', 'warning');
+          return;
+        }
+        
+        // Update the popularViewsData array with new data
+        popularViewsData.length = 0; // Clear existing data
+        popularViewsData.push(...newViewsData);
+        
+        // Re-render the views
+        renderPopularViews(viewSearchInput.value, currentAppFilter);
+        
+        showUploadStatus(`Successfully loaded ${newViewsData.length} views from CSV.`, 'success');
+      }
+      
+      // Display upload status messages
+      function showUploadStatus(message, type) {
+        uploadStatus.textContent = message;
+        uploadStatus.className = `alert alert-${type}`;
+        uploadStatus.classList.remove('hidden');
+        
+        setTimeout(() => {
+          uploadStatus.classList.add('hidden');
+        }, 5000);
+      }
+      
+      // Load popular views data from CSV (this would normally be done via an API or backend)
+      // For this demo, we're using the hardcoded data defined above
+      function loadPopularViewsData() {
+        // In a real application, this would fetch data from an API or backend
+        // For now, we're using the hardcoded popularViewsData array
+        console.log("Popular views data loaded:", popularViewsData.length, "views");
+      }
+      
+      // Initialize with data
+      loadPopularViewsData();
     });
   </script>
 </body>
